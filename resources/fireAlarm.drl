@@ -1,0 +1,51 @@
+package com.tertulia.firealarm;
+
+rule "when fire then activate sprinkler"
+	when
+		Fire($room: room)
+		$sprinkler: Sprinkler(room == $room, on == false)
+	then
+		modify($sprinkler){ setOn(true) };
+		System.out.println("sprinkler in the room " + $room.getName() + " is ON");
+end
+
+rule "when there isn't fire desactivate sprinkler"
+	when
+		$room: Room()
+		$sprinkler : Sprinkler(room == $room, on == true)
+		not Fire(room == $room)
+	then 
+		modify($sprinkler){ setOn(false)};
+		System.out.println("sprinkler in the room " + $room.getName() + " is OFF");
+end
+
+rule "when Fire then insert Alarm"
+	when 
+		exists Fire()
+	then
+		insert( new Alarm()); 
+		System.out.println("Alarm!!!!");
+end
+
+rule "when not Fire retract Alarm"
+	when 
+		not Fire()
+		$alarm : Alarm()
+	then 
+		retract($alarm);
+		System.out.println("Alarm is gone!!");
+end
+
+rule "Everything OK"
+	when
+		not Alarm()
+		not Sprinkler(on == true)
+	then
+		System.out.println("Everything OK");
+end
+
+
+
+
+
+		

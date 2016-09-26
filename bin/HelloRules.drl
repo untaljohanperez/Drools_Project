@@ -1,0 +1,8 @@
+package com.tertulia;
+rule "Hola mundo"
+	when
+		$student : Student( age >= 18)
+	then
+		System.out.println($student.getName() + " has valid age");
+		$student.setValid(true);
+	end
